@@ -76,7 +76,7 @@ root 는 필요 없지만, 다른 유저 소유 프로세스의 fd 카운트를 
 | **half-open ratio** | `SYN_RECV / ESTAB`. 정상 시 거의 0. **> 0.5 → CRIT** |
 | **Filtered / Total** | `--ports` 필터에 걸린 연결 / 시스템 전체 연결 |
 | **ESTAB (Rq=0,Sq=0)** | 큐가 모두 비어 있는 ESTAB 수. **`[heuristic]` — false-positive 많음. 참고용** |
-| **unique src IPs / /24 subnets** | 소스 다양성. 봇넷 스푸핑 유형은 여기가 튐 |
+| **unique src IPs / /24 subnets** | 소스 다양성. 봇넷 스푸핑 유형은 여기가 증가 |
 | **Long-idle ESTAB** (`--track-age`) | 관찰 후 N 초 지났는데도 Rq=Sq=0 인 연결. **handshake 후 abandon 공격의 정확한 신호** |
 | **LISTEN accept queue** | 포트별 현재 대기 / 최대 backlog. **80% 넘으면 애플리케이션이 accept 를 못 따라잡음** |
 
@@ -103,7 +103,7 @@ root 는 필요 없지만, 다른 유저 소유 프로세스의 fd 카운트를 
 | **UdpIn / UdpOut** | UDP pps | (rate) |
 | **UdpInErrors** | 체크섬 오류 등 | WARN |
 | **UdpNoPorts** | 리스닝 안 하는 포트로 온 UDP. **반사(amplification)/스캔 신호** | WARN (baseline × 5 초과 시) |
-| **UdpRcvbufErr** | **소켓 rx 버퍼 오버플로**. TCP 의 ListenOverflows 상당. 애플리케이션이 UDP 못 따라잡음 | CRIT |
+| **UdpRcvbufErr** | **소켓 rx 버퍼 오버플로**로 UDP 데이터그램이 커널에서 드롭됨. 애플리케이션의 `recvfrom` 이 느려 커널 소켓 버퍼(`SO_RCVBUF`)를 다 채운 상태. TCP 의 `ListenOverflows` 와 대응되는 "커널이 애플리케이션 대신 트래픽을 버리기 시작한" 신호 | CRIT |
 | **UdpSndbufErr** | 송신 병목 | WARN |
 | **IpReasmReqds / IpReasmFails** | IP fragment reassembly. **Fails ≥ 5/s = fragmentation 공격 의심** | WARN |
 
